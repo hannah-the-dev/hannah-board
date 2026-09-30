@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>새 게시글</title>
+</head>
+<style>
+    .layout {
+        width: 500px;
+        margin: 40px auto 0;
+    }
+
+    .layout > input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .layout > textarea {
+        width: 100%;
+        margin-top: 10px;
+        min-height: 300px;
+    }
+</style>
+<body>
+<form class="layout" method="post" th:action="@{/post/save}" th:object="${post}">
+    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden">
+    <div>
+        <label>
+            title
+            <input th:field="*{title}" type="text">
+        </label>
+    </div>
+    <div>
+        <label>
+            content
+            <textarea th:field="*{content}"></textarea>
+        </label>
+    </div>
+    <button type="submit">작성</button>
+</form>
+
+</body>
+</html>

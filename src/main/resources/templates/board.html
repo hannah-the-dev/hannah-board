@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판</title>
+</head>
+<style>
+    .layout {
+        width: 500px;
+        margin: 40px auto 0;
+    }
+
+    .layout > input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .layout > textarea {
+        width: 100%;
+        margin-top: 10px;
+        min-height: 300px;
+    }
+    .clickable {
+        cursor: pointer;
+    }
+</style>
+<body>
+<div class="" th:object="${page}">
+
+    <table>
+        <thead>
+        <tr>
+            <td>번호</td>
+            <td>제목</td>
+            <td>조회수</td>
+            <td>작성일시</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="clickable" th:each="post: ${page}" th:onClick="'location.href=\''+@{'/post/'+${post.id}}+'\''">
+            <td><span th:text="${post.id}"></span></td>
+            <td><span th:text="${post.title}"></span></td>
+            <td><span th:text="${post.hits}"></span></td>
+            <td><span th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
+        </tr>
+
+        </tbody>
+    </table>
+    <!-- 페이징 영역 시작 -->
+    <div class="text-xs-center">
+        <ul class="pagination justify-content-center">
+            <!--       이전 -->
+            <li class="page-item" th:unless="${page.first}"><a class="page-link" th:href="@{''(id=${post.id}, page=1)}">처음</a>
+            </li>
+            <li class="page-item" th:unless="${page.first}"><a class="page-link"
+                                                               th:href="@{''(id=${post.id}, page=${page.number-1})}">&larr;</a>
+            </li>
+            <!--       페이지 그룹 -->
+            <li class='page-item' th:classappend="${this == page.number +1} ? 'disabled'"
+                th:each="this: ${#numbers.sequence(startBlockPage, endBlockPage)}">
+                <a class="page-link" th:href="@{''(page=${this})}" th:text='${this}'></a></li>
+            <!--       다음 -->
+            <li class="page-item" th:unless="${page.last}"><a class="page-link"
+                                                              th:href="@{''(page=${page.number+2})}">&rarr;</a>
+            </li>
+            <li class="page-item" th:unless="${page.last}"><a class="page-link"
+                                                              th:href="@{''(page=${page.totalPages})}">끝</a>
+            </li>
+        </ul>
+    </div>
+    <!-- 페이징 영역 끝 -->
+</div>
+<button>새 글쓰기</button>
+
+</body>
+</html>

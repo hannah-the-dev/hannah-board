@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>내 정보</title>
+</head>
+<style>
+    .layout {
+        width: 500px;
+        margin: 40px auto 0;
+    }
+
+    .layout > input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .layout > textarea {
+        width: 100%;
+        margin-top: 10px;
+        min-height: 300px;
+    }
+</style>
+<body>
+<form class="layout" th:object="${user}">
+    <div>
+        <label>
+            username
+            <input th:field="*{username}">
+        </label>
+    </div>
+    <div>
+        <label>
+            role
+            <input th:field="*{role}">
+        </label>
+    </div>
+    <div>
+        <label>
+            status
+            <input th:field="*{status}">
+        </label>
+    </div>
+    <button type="submit">수정</button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>새 게시글</title>
+</head>
+<style>
+    .layout {
+        width: 500px;
+        margin: 40px auto 0;
+    }
+
+    .layout > input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .layout > textarea {
+        width: 100%;
+        margin-top: 10px;
+        min-height: 300px;
+    }
+</style>
+<body>
+<form class="layout" th:object="${post}">
+
+        <label>
+            title
+            <input id="boardTitle" th:field="*{title}" type="text">
+        </label>
+        <label>
+            read
+            <input th:field="*{hits}" type="number">
+        </label>
+
+        <label>
+            content
+            <textarea th:field="*{content}"></textarea>
+        </label>
+
+    <button type="submit"></button>
+</form>
+
+</body>
+</html>
