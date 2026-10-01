@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 | Hannah Board</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" href="/" aria-label="Hannah Board 홈">Hannah Board</a>
+    <button class="menu-button" type="button" aria-label="메뉴 열기" aria-controls="sideMenu" aria-expanded="false">
+        <span class="menu-icon" aria-hidden="true"></span>
+    </button>
+</header>
+
+<div class="menu-overlay" data-menu-close></div>
+<aside class="side-menu" id="sideMenu" aria-label="주 메뉴">
+    <nav>
+        <a href="/">홈</a>
+        <a href="/login" aria-current="page">로그인</a>
+        <a href="/signup">회원가입</a>
+        <a href="/board/list">게시판</a>
+    </nav>
+</aside>
+
+<main class="form-shell">
+    <section class="form-header" aria-labelledby="pageTitle">
+        <p class="eyebrow">Welcome back</p>
+        <h1 id="pageTitle">다시 만나요</h1>
+        <p>로그인하고 내 정보와 게시글을 확인하세요.</p>
+    </section>
+
+    <form class="form-card" action="/login" method="post">
+        <p class="form-error" id="loginError" aria-live="polite"></p>
+
+        <div class="field-group">
+            <label for="username">아이디</label>
+            <input id="username" name="username" type="text" autocomplete="username" required>
+        </div>
+
+        <div class="field-group">
+            <label for="password">비밀번호</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+        </div>
+
+        <button class="primary-button" type="submit">로그인</button>
+        <p class="form-footer">아직 계정이 없나요? <a href="/signup">회원가입</a></p>
+    </form>
+</main>
+
+<script>
+    const menuButton = document.querySelector('.menu-button');
+    const sideMenu = document.querySelector('#sideMenu');
+    const overlay = document.querySelector('.menu-overlay');
+
+    function closeMenu() {
+        sideMenu.classList.remove('is-open');
+        overlay.classList.remove('is-visible');
+        menuButton.setAttribute('aria-expanded', 'false');
+        menuButton.setAttribute('aria-label', '메뉴 열기');
+    }
+
+    menuButton.addEventListener('click', () => {
+        const isOpen = sideMenu.classList.toggle('is-open');
+        overlay.classList.toggle('is-visible', isOpen);
+        menuButton.setAttribute('aria-expanded', String(isOpen));
+        menuButton.setAttribute('aria-label', isOpen ? '메뉴 닫기' : '메뉴 열기');
+    });
+
+    overlay.addEventListener('click', closeMenu);
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeMenu();
+    });
+</script>
+</body>
+</html>

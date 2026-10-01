@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 정보 | Hannah Board</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" href="/" aria-label="Hannah Board 홈">Hannah Board</a>
+    <button class="menu-button" type="button" aria-label="메뉴 열기" aria-controls="sideMenu" aria-expanded="false">
+        <span class="menu-icon" aria-hidden="true"></span>
+    </button>
+</header>
+
+<div class="menu-overlay"></div>
+<aside class="side-menu" id="sideMenu" aria-label="주 메뉴">
+    <nav>
+        <a href="/">홈</a>
+        <a href="/user/1" aria-current="page">내 정보</a>
+        <a href="/board/list">게시판</a>
+    </nav>
+</aside>
+
+<main class="info-shell">
+    <section class="form-header" aria-labelledby="pageTitle">
+        <p class="eyebrow">My profile</p>
+        <h1 id="pageTitle">내 정보</h1>
+        <p>Hannah Board에서 사용하는 내 계정 정보입니다.</p>
+    </section>
+
+    <section class="profile-card" aria-label="사용자 정보">
+        <div class="profile-summary">
+            <div class="profile-avatar" aria-hidden="true">H</div>
+            <div>
+                <p class="profile-label">USERNAME</p>
+                <h2>hannah</h2>
+                <p class="profile-status">정상 계정 · USER</p>
+            </div>
+        </div>
+
+        <dl class="profile-details">
+            <div><dt>회원 번호</dt><dd>1</dd></div>
+            <div><dt>아이디</dt><dd>hannah</dd></div>
+            <div><dt>역할</dt><dd>USER</dd></div>
+            <div><dt>상태</dt><dd>NORMAL</dd></div>
+            <div><dt>가입일</dt><dd>2026-10-01 09:00:00</dd></div>
+        </dl>
+    </section>
+
+    <a class="text-link" href="/board/list">게시판으로 이동하기 <span aria-hidden="true">↗</span></a>
+</main>
+
+<script>
+    const menuButton = document.querySelector('.menu-button');
+    const sideMenu = document.querySelector('#sideMenu');
+    const overlay = document.querySelector('.menu-overlay');
+    function closeMenu() {
+        sideMenu.classList.remove('is-open');
+        overlay.classList.remove('is-visible');
+        menuButton.setAttribute('aria-expanded', 'false');
+        menuButton.setAttribute('aria-label', '메뉴 열기');
+    }
+    menuButton.addEventListener('click', () => {
+        const isOpen = sideMenu.classList.toggle('is-open');
+        overlay.classList.toggle('is-visible', isOpen);
+        menuButton.setAttribute('aria-expanded', String(isOpen));
+        menuButton.setAttribute('aria-label', isOpen ? '메뉴 닫기' : '메뉴 열기');
+    });
+    overlay.addEventListener('click', closeMenu);
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeMenu();
+    });
+</script>
+</body>
+</html>

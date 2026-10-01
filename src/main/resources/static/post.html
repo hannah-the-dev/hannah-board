@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 | Hannah Board</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" href="/" aria-label="Hannah Board 홈">Hannah Board</a>
+    <button class="menu-button" type="button" aria-label="메뉴 열기" aria-controls="sideMenu" aria-expanded="false">
+        <span class="menu-icon" aria-hidden="true"></span>
+    </button>
+</header>
+
+<div class="menu-overlay"></div>
+<aside class="side-menu" id="sideMenu" aria-label="주 메뉴">
+    <nav>
+        <a href="/">홈</a>
+        <a href="/user/1">내 정보</a>
+        <a href="/board/list">게시판</a>
+    </nav>
+</aside>
+
+<main class="post-shell">
+    <a class="back-link" href="/board/list">← 게시판으로 돌아가기</a>
+    <article class="post-detail">
+        <div class="saved-notice" role="status">게시글이 저장되었습니다.</div>
+        <header class="post-detail-header">
+            <p class="eyebrow">Post #3</p>
+            <h1>오늘의 작은 기록</h1>
+            <div class="post-meta"><span>2026-10-01 10:20</span><span>조회 12</span></div>
+        </header>
+        <div class="post-content">
+            오늘도 차분하게 하루를 기록해봅니다.
+
+            작은 문장 하나가 하루를 오래 기억하게 해줄 때가 있습니다. Hannah Board에도 좋은 이야기가 차곡차곡 쌓이길 바랍니다.
+        </div>
+    </article>
+</main>
+
+<script>
+    const menuButton = document.querySelector('.menu-button');
+    const sideMenu = document.querySelector('#sideMenu');
+    const overlay = document.querySelector('.menu-overlay');
+    function closeMenu() {
+        sideMenu.classList.remove('is-open');
+        overlay.classList.remove('is-visible');
+        menuButton.setAttribute('aria-expanded', 'false');
+        menuButton.setAttribute('aria-label', '메뉴 열기');
+    }
+    menuButton.addEventListener('click', () => {
+        const isOpen = sideMenu.classList.toggle('is-open');
+        overlay.classList.toggle('is-visible', isOpen);
+        menuButton.setAttribute('aria-expanded', String(isOpen));
+        menuButton.setAttribute('aria-label', isOpen ? '메뉴 닫기' : '메뉴 열기');
+    });
+    overlay.addEventListener('click', closeMenu);
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeMenu();
+    });
+</script>
+</body>
+</html>

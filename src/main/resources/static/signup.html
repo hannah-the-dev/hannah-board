@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 | Hannah Board</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" href="/" aria-label="Hannah Board 홈">Hannah Board</a>
+    <button class="menu-button" type="button" aria-label="메뉴 열기" aria-controls="sideMenu" aria-expanded="false">
+        <span class="menu-icon" aria-hidden="true"></span>
+    </button>
+</header>
+
+<div class="menu-overlay"></div>
+<aside class="side-menu" id="sideMenu" aria-label="주 메뉴">
+    <nav>
+        <a href="/">홈</a>
+        <a href="/login">로그인</a>
+        <a href="/signup" aria-current="page">회원가입</a>
+        <a href="/board/list">게시판</a>
+    </nav>
+</aside>
+
+<main class="form-shell">
+    <section class="form-header" aria-labelledby="pageTitle">
+        <p class="eyebrow">Join us</p>
+        <h1 id="pageTitle">처음 오셨나요?</h1>
+        <p>간단한 정보로 Hannah Board를 시작해보세요.</p>
+    </section>
+
+    <form class="form-card" action="/signup" method="post">
+        <div class="field-group username-group">
+            <label for="username">아이디</label>
+            <div class="input-action-row">
+                <input id="username" name="username" type="text" autocomplete="username" required>
+                <button class="secondary-button" type="button" id="checkUsernameButton">중복 확인</button>
+            </div>
+            <p class="field-message" id="usernameMessage" aria-live="polite"></p>
+        </div>
+
+        <div class="field-group">
+            <label for="password">비밀번호</label>
+            <input id="password" name="password" type="password" autocomplete="new-password" required>
+        </div>
+
+        <button class="primary-button" type="submit" id="signupButton" disabled>회원가입</button>
+        <p class="form-footer">이미 계정이 있나요? <a href="/login">로그인</a></p>
+    </form>
+</main>
+
+<script>
+    const menuButton = document.querySelector('.menu-button');
+    const sideMenu = document.querySelector('#sideMenu');
+    const overlay = document.querySelector('.menu-overlay');
+    const username = document.querySelector('#username');
+    const checkButton = document.querySelector('#checkUsernameButton');
+    const signupButton = document.querySelector('#signupButton');
+    const usernameMessage = document.querySelector('#usernameMessage');
+
+    function closeMenu() {
+        sideMenu.classList.remove('is-open');
+        overlay.classList.remove('is-visible');
+        menuButton.setAttribute('aria-expanded', 'false');
+        menuButton.setAttribute('aria-label', '메뉴 열기');
+    }
+
+    menuButton.addEventListener('click', () => {
+        const isOpen = sideMenu.classList.toggle('is-open');
+        overlay.classList.toggle('is-visible', isOpen);
+        menuButton.setAttribute('aria-expanded', String(isOpen));
+        menuButton.setAttribute('aria-label', isOpen ? '메뉴 닫기' : '메뉴 열기');
+    });
+    overlay.addEventListener('click', closeMenu);
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeMenu();
+    });
+
+    username.addEventListener('input', () => {
+        signupButton.disabled = true;
+        usernameMessage.textContent = '아이디 중복 확인이 필요합니다.';
+        usernameMessage.className = 'field-message';
+    });
+
+    checkButton.addEventListener('click', async () => {
+        if (!username.value.trim()) {
+            usernameMessage.textContent = '아이디를 입력해주세요.';
+            usernameMessage.className = 'field-message is-warning';
+            username.focus();
+            return;
+        }
+
+        try {
+            const response = await fetch('/check-username?username=' + encodeURIComponent(username.value.trim()));
+            const exists = await response.json();
+            signupButton.disabled = exists;
+            usernameMessage.textContent = exists ? '이미 사용 중인 아이디입니다.' : '사용 가능한 아이디입니다.';
+            usernameMessage.className = exists ? 'field-message is-warning' : 'field-message is-success';
+        } catch (error) {
+            signupButton.disabled = true;
+            usernameMessage.textContent = '중복 확인에 실패했습니다.';
+            usernameMessage.className = 'field-message is-warning';
+        }
+    });
+</script>
+</body>
+</html>
