@@ -1,9 +1,10 @@
 package com.hannah.hannahboard.controller;
 
+import com.hannah.hannahboard.dto.PostRequest;
+import com.hannah.hannahboard.dto.PostResponse;
 import com.hannah.hannahboard.entity.Post;
 import com.hannah.hannahboard.exception.PostNotFoundException;
 import com.hannah.hannahboard.service.PostService;
-import dto.PostResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,8 +27,8 @@ public class PostController {
     }
 
     @PostMapping("/save")
-    public String post(Post post) {
-        postService.write(post);
+    public String post(PostRequest request) throws Exception {
+        postService.write(request);
         return "redirect:/board/list";
     }
 

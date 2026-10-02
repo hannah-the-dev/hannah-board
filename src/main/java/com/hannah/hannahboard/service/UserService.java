@@ -1,9 +1,9 @@
 package com.hannah.hannahboard.service;
 
+import com.hannah.hannahboard.dto.UserRequest;
+import com.hannah.hannahboard.dto.UserResponse;
 import com.hannah.hannahboard.entity.User;
 import com.hannah.hannahboard.repository.UserRepository;
-import dto.UserRequest;
-import dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,6 +37,7 @@ public class UserService {
         if (!user.getPassword().equals(encodedPassword)) {
             throw new Exception("password not matched.");
         }
+
         return UserResponse.of(user);
     }
 }

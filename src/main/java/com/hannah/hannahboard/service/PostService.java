@@ -1,9 +1,14 @@
 package com.hannah.hannahboard.service;
 
+import com.hannah.hannahboard.component.CustomUserDetails;
+import com.hannah.hannahboard.dto.PostRequest;
+import com.hannah.hannahboard.dto.PostResponse;
 import com.hannah.hannahboard.entity.Post;
+import com.hannah.hannahboard.entity.User;
 import com.hannah.hannahboard.exception.PostNotFoundException;
 import com.hannah.hannahboard.repository.PostRepository;
-import dto.PostResponse;
+import com.hannah.hannahboard.repository.UserRepository;
+import io.jsonwebtoken.security.SecurityException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,21 +30,36 @@ public class PostService {
     private final StringRedisTemplate redisTemplate;
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    public void write(Post board) {
-        postRepository.save(board);
+    public void write(PostRequest request) throws SecurityException {
+        User writer = null;
+        if (request.getWriterId() != null) {
+            // 사용자 세션 검증
+            writer = userRepository.findById(request.getWriterId()).orElseThrow();
+            Authentication authentication =
+                    SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null) {
+                throw new SecurityException("로그인하세요");
+            }
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            if (!writer.getId().equals(userDetails.getId())) {
+                throw new SecurityException("본인의 글만 수정할 수 있습니다");
+            }
+        }
+        Post entity = request.toEntity(writer);
+        postRepository.save(entity);
     }
 
     public PostResponse getPost(Long id) throws PostNotFoundException {
         Post post = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
         long bufferedHits = incrementHits(id);
         long totalHits = post.getHits() + bufferedHits;
-
         return PostResponse.of(post, totalHits);
     }
 
     private long incrementHits(Long id) {
-
         String viewKey = "post:hits:" + id;
         redisTemplate.opsForValue().increment(viewKey);
         String buffered = redisTemplate.opsForValue().get(viewKey);
@@ -46,7 +68,6 @@ public class PostService {
 
 
     public Page<PostResponse> getList(Pageable pageable) {
-
         Page<Post> page = postRepository.findAll(pageable);
         List<String> keys = page.stream().map(post -> "post:hits:" + post.getId()).toList();
         List<Long> hits =

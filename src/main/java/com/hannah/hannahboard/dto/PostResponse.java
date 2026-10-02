@@ -1,4 +1,4 @@
-package dto;
+package com.hannah.hannahboard.dto;
 
 import com.hannah.hannahboard.entity.Post;
 import lombok.Getter;
