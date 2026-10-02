@@ -1,9 +1,9 @@
 package com.hannah.hannahboard.controller;
 
+import com.hannah.hannahboard.dto.UserRequest;
+import com.hannah.hannahboard.dto.UserResponse;
 import com.hannah.hannahboard.exception.PostNotFoundException;
 import com.hannah.hannahboard.service.UserService;
-import dto.UserRequest;
-import dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +30,7 @@ public class UserController {
         return "redirect:/user/" + user.getId();
     }
 
-    @GetMapping("user/{id}")
+    @GetMapping("/user/{id}")
     public String getUser(@PathVariable Long id, Model model) throws PostNotFoundException {
         UserResponse user = userService.getUser(id);
         model.addAttribute("user", user);

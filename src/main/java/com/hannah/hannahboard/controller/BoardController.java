@@ -1,7 +1,7 @@
 package com.hannah.hannahboard.controller;
 
+import com.hannah.hannahboard.dto.PostResponse;
 import com.hannah.hannahboard.service.PostService;
-import dto.PostResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
